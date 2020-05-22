@@ -59,6 +59,6 @@ class LinearRegression:
         :return: the predicted/target value
         """
         if add_intercept:
-            x = np.append([1], x)
+            x = add_intercept_term(x)
 
         return self._hypothesis(x, self.theta)

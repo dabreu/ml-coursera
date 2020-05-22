@@ -1,6 +1,6 @@
 import numpy as np
 from machine_learning.preprocessing import add_intercept_term
-
+from .commons import sigmoid
 
 class LogisticRegression:
     """
@@ -12,12 +12,11 @@ class LogisticRegression:
     def fit(self, x, y, alpha, iterations, add_intercept=False):
         if add_intercept:
             x = add_intercept_term(x)
-
         m, n = x.shape
         self.theta = np.zeros(n)
         cost_history = np.zeros(iterations)
         for i in range(iterations):
-            self.theta = self.theta - alpha * (1 / m) * (x.transpose().dot(self._hypothesis(x, self.theta) - y))
+            self.theta = self.theta - alpha * self.gradient(x, y, self.theta)
             cost_history[i] = self.cost(x, y, self.theta)
         return cost_history
 
@@ -44,11 +43,7 @@ class LogisticRegression:
     @classmethod
     def _hypothesis(cls, x, theta):
         # Computes the hypothesis function for the given sample and theta
-        return cls._sigmoid(x.dot(theta))
-
-    @classmethod
-    def _sigmoid(cls, z):
-        return 1 / (1 + np.exp(-z))
+        return sigmoid(x.dot(theta))
 
     def predict_probability(self, x, add_intercept=True):
         """
@@ -68,5 +63,3 @@ class LogisticRegression:
         probability = self.predict_probability(x, add_intercept)
         return 1 if probability >= 0.5 else 0
 
-    def accuracy(self, prediction, y):
-        return np.mean(prediction == y) * 100

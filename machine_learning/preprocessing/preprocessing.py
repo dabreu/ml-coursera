@@ -88,4 +88,4 @@ class MinMaxScaler(Scaler):
 
 
 def add_intercept_term(x):
-    return np.c_[np.ones((x.shape[0], 1)), x]
+    return np.c_[np.ones((np.shape(x)[0], 1)), x]

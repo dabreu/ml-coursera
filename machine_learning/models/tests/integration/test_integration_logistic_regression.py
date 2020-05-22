@@ -3,6 +3,7 @@ import numpy as np
 import pandas as pd
 import datatest as dt
 from machine_learning.models import LogisticRegression
+from machine_learning.models import accuracy
 from machine_learning.preprocessing import add_intercept_term
 from machine_learning.preprocessing import StandardScaler
 
@@ -38,4 +39,4 @@ def test_logistic_regression_predict(samples1, logistic_regression_model):
     iterations = 100
     J_History = logistic_regression_model.fit(x, y, 1, iterations, add_intercept=True)
     predictions = [logistic_regression_model.predict(x.iloc[i, :]) for i in range(np.size(x, 0))]
-    assert logistic_regression_model.accuracy(predictions, y) > 80
+    assert accuracy(predictions, y) > 80
