@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+
 import numpy as np
 
 
@@ -29,11 +30,13 @@ class StandardScaler(Scaler):
 
     def transform(self, x):
         """
-        Function to standardize the features. It returns scaled X,  where the mean of each feature is 0 and the standard
-        deviation is 1.
-        The calculated mean and standard deviation by feature are stored as part of the normalizer'state.
+        Function to standardize the features. It returns scaled X,  where the mean of each feature
+        is 0 and the standard deviation is 1.
+        The calculated mean and standard deviation by feature are stored as part of the
+        normalizer's state.
 
-        :param x: matrix(m,n) with the values of features x to normalize, where m = #training samples and n = #features
+        :param x: matrix(m,n) with the values of features x to normalize, where
+                m = #training samples and n = #features
         :return: the normalized x
         """
         if self.mu is None:
@@ -67,7 +70,8 @@ class MinMaxScaler(Scaler):
         Function to rescale features. It returns a normalized X using min-max normalization.
         The calculated min and max values by feature are stored as part of the normalizer'state.
 
-        :param x: matrix(m,n) with the values of features x to normalize, where m = #training samples and n = #features
+        :param x: matrix(m,n) with the values of features x to normalize,
+                where m = #training samples and n = #features
         :return: the normalized x
         """
         if self.min is None:

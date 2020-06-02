@@ -1,5 +1,7 @@
 import numpy as np
-from machine_learning.preprocessing import add_intercept_term
+
+from preprocessing import add_intercept_term
+
 
 class LinearRegression:
     """
@@ -17,8 +19,8 @@ class LinearRegression:
         :param y: the vector(m) with the target values
         :param alpha: the learning rate used by the algorithm
         :param iterations: the number of iterations to perform
-        :return: returns the history of the cost function calculated for each iteration. The theta coefficients are
-        stored as part of the model's state
+        :return: returns the history of the cost function calculated for each iteration.
+        The theta coefficients are stored as part of the model's state
         """
         if add_intercept:
             x = add_intercept_term(x)
@@ -33,15 +35,17 @@ class LinearRegression:
 
     def cost(self, x, y, theta):
         """
-        Computes the cost function as the mean squared error between the predicted/hypothesis and target values
+        Computes the cost function as the mean squared error between the predicted/hypothesis
+        and target values
 
-        :param x: matrix(m,n) with the values of features x, where m = #training samples and n = #features
+        :param x: matrix(m,n) with the values of features x, where m = #training samples and
+                n = #features
         :param y: vector(m) with the target values
         :param theta: vector(n) with theta/coefficients values
         :return: cost for linear regression of using theta to fit data points in x and y
         """
         m = np.size(x, 0)
-        error = self._hypothesis(x, theta) - y  # error between the calculated prediction and the target
+        error = self._hypothesis(x, theta) - y  # error between the prediction and the target
         cost = (1 / (2 * m)) * np.sum(np.square(error))  # mean squared error
         return cost
 

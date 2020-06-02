@@ -1,11 +1,14 @@
 import numpy as np
-from machine_learning.preprocessing import add_intercept_term
+
+from preprocessing import add_intercept_term
 from .commons import sigmoid
+
 
 class LogisticRegression:
     """
     Class for logistic regression model
     """
+
     def __init__(self):
         self.theta = None
 
@@ -24,7 +27,8 @@ class LogisticRegression:
         """
         Computes the cost function based on cross-entropy loss or log loss
 
-        :param x: matrix(m,n) with the values of features x, where m = #training samples and n = #features
+        :param x: matrix(m,n) with the values of features x,
+                where m = #training samples and n = #features
         :param y: vector(m) with the target values
         :param theta: vector(n) with theta/coefficients values (decision boundary)
         :return: cost for logistic regression
@@ -36,13 +40,13 @@ class LogisticRegression:
         return cost
 
     def gradient(self, x, y, theta):
-        # Computes the gradient of the cost function at theta
+        """ Computes the gradient of the cost function at theta """
         m = x.shape[0]
         return (1 / m) * (x.transpose().dot(self._hypothesis(x, theta) - y))
 
     @classmethod
     def _hypothesis(cls, x, theta):
-        # Computes the hypothesis function for the given sample and theta
+        """ Computes the hypothesis function for the given sample and theta """
         return sigmoid(x.dot(theta))
 
     def predict_probability(self, x, add_intercept=True):
@@ -59,7 +63,6 @@ class LogisticRegression:
         return self._hypothesis(x, self.theta)
 
     def predict(self, x, add_intercept=True):
-        # Predicts the probability of target being 1 and then classify the value
+        """ Predicts the probability of target being 1 and then classify the value """
         probability = self.predict_probability(x, add_intercept)
         return 1 if probability >= 0.5 else 0
-

@@ -1,6 +1,5 @@
-import pytest
 import numpy as np
-from machine_learning.models import sigmoid, sigmoid_gradient, accuracy
+from models import sigmoid, sigmoid_gradient, accuracy
 
 
 def test_sigmoid():
@@ -25,17 +24,17 @@ def test_sigmoid_gradient():
     assert sigmoid_gradient(-1000) == 0
 
 
-def test_sigmoid_on_vector():
+def test_sigmoid_gradient_on_vector():
     value = np.array([-1, - 0.5, 0, 0.5, 1])
-    np.testing.assert_array_almost_equal(sigmoid_gradient(value),
-                                         np.array([0.196612, 0.235004, 0.250000, 0.235004, 0.196612]), 10 ** -7)
+    expected = np.array([0.196612, 0.235004, 0.250000, 0.235004, 0.196612])
+    np.testing.assert_array_almost_equal(sigmoid_gradient(value), expected, 10 ** -7)
 
 
-def test_sigmoid_on_matrix():
+def test_sigmoid_gradient_on_matrix():
     value = np.array([[-1, - 0.5, 0, 0.5, 1], [0, 0.5, 1, -1, -0.5]])
-    np.testing.assert_array_almost_equal(sigmoid_gradient(value),
-                                         np.array([[0.196612, 0.235004, 0.250000, 0.235004, 0.196612],
-                                                  [0.250000, 0.235004, 0.196612, 0.196612, 0.235004]]), 10 ** -7)
+    expected = np.array([[0.196612, 0.235004, 0.250000, 0.235004, 0.196612],
+                         [0.250000, 0.235004, 0.196612, 0.196612, 0.235004]])
+    np.testing.assert_array_almost_equal(sigmoid_gradient(value), expected, 10 ** -7)
 
 
 def test_accuracy():
@@ -43,10 +42,12 @@ def test_accuracy():
     y = np.array([1, 2, 3, 4, 5, 6])
     assert accuracy(prediction, y) == 50
 
+
 def test_no_accuracy():
     prediction = np.array([8, 8, 8, 8, 8, 8])
     y = np.array([1, 2, 3, 4, 5, 6])
     assert accuracy(prediction, y) == 0
+
 
 def test_full_accuracy():
     prediction = np.array([1, 2, 3, 4, 5, 6])

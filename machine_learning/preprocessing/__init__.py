@@ -1,3 +1,1 @@
-from .preprocessing import StandardScaler
-from .preprocessing import MinMaxScaler
-from .preprocessing import add_intercept_term
+from .preprocessing import StandardScaler, MinMaxScaler, add_intercept_term

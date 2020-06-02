@@ -2,10 +2,11 @@ import pytest
 import numpy as np
 import pandas as pd
 import datatest as dt
-from machine_learning.models import LogisticRegression
-from machine_learning.models import accuracy
-from machine_learning.preprocessing import add_intercept_term
-from machine_learning.preprocessing import StandardScaler
+from models import LogisticRegression
+from models import accuracy
+from preprocessing import add_intercept_term
+from preprocessing import StandardScaler
+
 
 @pytest.fixture(scope='module')
 @dt.working_directory(__file__)
@@ -17,6 +18,7 @@ def samples1():
 @pytest.fixture()
 def logistic_regression_model():
     return LogisticRegression()
+
 
 @pytest.mark.integration
 def test_logistic_regression_cost_theta_zero(samples1, logistic_regression_model):
@@ -37,6 +39,6 @@ def test_logistic_regression_predict(samples1, logistic_regression_model):
     x, y = samples1
     x = StandardScaler().transform(x)
     iterations = 100
-    J_History = logistic_regression_model.fit(x, y, 1, iterations, add_intercept=True)
+    logistic_regression_model.fit(x, y, 1, iterations, add_intercept=True)
     predictions = [logistic_regression_model.predict(x.iloc[i, :]) for i in range(np.size(x, 0))]
     assert accuracy(predictions, y) > 80

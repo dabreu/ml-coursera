@@ -2,9 +2,9 @@ import pytest
 import numpy as np
 import pandas as pd
 import datatest as dt
-from machine_learning.models import LinearRegression
-from machine_learning.preprocessing import add_intercept_term
-from machine_learning.preprocessing import StandardScaler
+from models import LinearRegression
+from preprocessing import add_intercept_term
+from preprocessing import StandardScaler
 
 
 @pytest.fixture(scope='module')

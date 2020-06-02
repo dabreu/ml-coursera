@@ -82,6 +82,7 @@ ENV/
 .ropeproject
 
 .idea/*
+*/.idea/
 
 .DS_Store
 

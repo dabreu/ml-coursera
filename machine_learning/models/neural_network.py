@@ -1,5 +1,5 @@
 import numpy as np
-from machine_learning.preprocessing import add_intercept_term
+
 from .commons import sigmoid, sigmoid_gradient
 
 
@@ -12,9 +12,10 @@ class NeuralNetwork:
 
     def __init__(self, layers):
         """
-        Creates an empty neural network with the given layers, having the #units per layer as indicated on the parameter
-        :param layers: vector indicating the number of activation units per layer (i.e. layers[0] = 5000 indicates 5000
-        activation units on layer 1)
+        Creates an empty neural network with the given layers, having the #units per layer as
+        indicated on the parameter
+        :param layers: vector indicating the number of activation units per layer
+        (i.e. layers[0] = 5000 indicates 5000 activation units on layer 1)
         """
         self.layers = layers
         self.num_layers = len(layers)
@@ -35,7 +36,7 @@ class NeuralNetwork:
         a_ = [xi]
         a = xi
         for weight in self.weights:
-            z = weight.dot(add_intercept_term(a))
+            z = weight.dot(add_intercept_term_vector(a))
             a = sigmoid(z)
             z_.append(z)
             a_.append(a)
@@ -50,14 +51,15 @@ class NeuralNetwork:
             # Compute the delta/error for the last layer (a(L) - y)
             delta = a_[-1] - yi
             # For each layer computes the delta and the corresponding gradient
-            for l in range(self.num_layers - 2, -1, -1):
+            for layer in range(self.num_layers - 2, -1, -1):
                 # Calculate the gradient for the layer
-                gradient_l = self._calculate_gradient(delta, a_, l)
-                gradient_[l] = gradient_[l] + gradient_l
+                gradient_l = self._calculate_gradient(delta, a_, layer)
+                gradient_[layer] = gradient_[layer] + gradient_l
                 # Computes the delta/error for the layer
-                delta = self._calculate_delta(delta, z_, l)
+                delta = self._calculate_delta(delta, z_, layer)
 
-        return [self._regularize(gradient, i, np.size(x, 0), vlambda) for i, gradient in enumerate(gradient_)]
+        return [self._regularize(gradient, i, np.size(x, 0), vlambda)
+                for i, gradient in enumerate(gradient_)]
 
     def cost(self, x, y):
         m = np.size(x, 0)
@@ -69,30 +71,32 @@ class NeuralNetwork:
         return (1 / m) * cost
 
     def _create_batches(self, x, y, batch_size):
-        return [(x[i:i + batch_size, :], y[i:i + batch_size, :]) for i in range(0, len(x), batch_size)]
+        return [(x[i:i + batch_size, :], y[i:i + batch_size, :])
+                for i in range(0, len(x), batch_size)]
 
     def _initialize_gradients(self):
         """ Initializes the gradients with zero """
         return [np.zeros(np.shape(weight)) for weight in self.weights]
 
     def _calculate_delta(self, delta, z, layer):
-        if layer == 0: return 0  # the first layer does not have delta/error as it corresponds to the X features
+        if layer == 0:
+            return 0  # the first layer doesn't have delta/err as it corresponds to the X features
         # Calculate the delta/error as delta(l) = theta(l)^T * delta(l+1) .* sigmoid'(z(l))
-        z_l = add_intercept_term(z[layer])
+        z_l = add_intercept_term_vector(z[layer])
         return (self.weights[layer].transpose().dot(delta)) * sigmoid_gradient(z_l)
 
     def _calculate_gradient(self, delta, a, layer):
         delta = delta.reshape(-1, 1)
         if layer != self.num_layers - 2:
-            # eliminate delta_0, which corresponds to the bias term, for all deltas except the latest one
+            # delete delta_0, which is the bias term, for all deltas except the latest one
             delta = delta[1:, :]
-        a_l = add_intercept_term(a[layer]).reshape(-1, 1)
+        a_l = add_intercept_term_vector(a[layer]).reshape(-1, 1)
         # Calculate the gradient as G(l) = delta(l+1) * a(l)ˆT
         return delta.dot(a_l.transpose())
 
     def _regularize(self, gradient, layer, m, vlambda):
         weights = self.weights[layer]
-        weights[:, 0] = 0  # set to zero the bias term of the weights as it should not be regularized
+        weights[:, 0] = 0  # set to zero the bias term of weights as it should not be regularized
         regularization = (vlambda / m) * weights
         return (1 / m) * gradient + regularization
 
@@ -101,8 +105,9 @@ class NeuralNetwork:
         return [self._get_initialized_weight(i) for i in range(self.num_layers - 1)]
 
     def _get_initialized_weight(self, i):
-        """ Creates a matrix of weights randomly initialized with values in interval (-epsilon, epsilon), where epsilon
-        is calculated based on the number of inputs and outputs of the layer """
+        """ Creates a matrix of weights randomly initialized with values in interval
+        (-epsilon, epsilon), where epsilon is calculated based on the number of inputs and outputs
+        of the layer """
         inputs = self.layers[i]
         outputs = self.layers[i + 1]
         init_epsilon = np.sqrt(6) / np.sqrt(inputs + outputs)
@@ -117,5 +122,5 @@ class NeuralNetwork:
         return [np.argmax(self._hypothesis(xi)) for xi in x]
 
 
-def add_intercept_term(x):
+def add_intercept_term_vector(x):
     return np.append([1], x)
